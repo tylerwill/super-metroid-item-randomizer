@@ -1,5 +1,6 @@
-package com.github.tylersharpe.smrandomizer;
+package com.github.tylersharpe.supermetroidrandomizer;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,18 @@ final class Util {
   static <T> T sample(Collection<T> collection) {
     List<T> list = collection instanceof List ? (List<T>) collection : new ArrayList<>(collection);
     return list.get(RNG.nextInt(list.size()));
+  }
+
+  static String getFilenameWithoutExtension(Path path) {
+    String fileName = path.getFileName().toString();
+    int lastDot = fileName.lastIndexOf('.');
+    return lastDot == fileName.length() - 1 ? fileName : fileName.substring(0, lastDot);
+  }
+
+  static String getExtension(Path path) {
+    String fileName = path.getFileName().toString();
+    int lastDot = fileName.lastIndexOf('.');
+    return lastDot == fileName.length() - 1 ? fileName : fileName.substring(lastDot + 1);
   }
 
 }

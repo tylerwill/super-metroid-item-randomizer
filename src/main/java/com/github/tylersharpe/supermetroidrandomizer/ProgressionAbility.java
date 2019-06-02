@@ -1,4 +1,4 @@
-package com.github.tylersharpe.smrandomizer;
+package com.github.tylersharpe.supermetroidrandomizer;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -7,13 +7,13 @@ import java.util.Set;
 import static java.util.stream.Collectors.toCollection;
 
 public enum ProgressionAbility {
-  PREVENT_HEAT_DAMAGE,
-  FREE_LIQUID_MOVEMENT,
+  VARIA,
+  GRAVITY,
 
   MORPH,
-  CLEAR_BOMB_OBSTRUCTIONS, // Bomb obstructions that can only be cleared by vanilla bombs or power bombs
+  CLEAR_BOMB_PASSAGES, // Bomb obstructions that can only be cleared by vanilla bombs or power bombs
   CLEAR_BRITTLE_WALLS, // Bomb obstructions that can be cleared by vanilla bombs, screw attack or power bombs
-  OPEN_MISSILE_DOORS,
+  OPEN_RED_DOORS,
   CLEAR_POWER_BOMB_OBSTRUCTIONS,
   CLEAR_SUPER_MISSILE_OBSTRUCTIONS,
 

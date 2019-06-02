@@ -1,17 +1,24 @@
-# sm-randomizer
-Randomizes the location of items in super metroid, respecting progression requirements and allowed strats.
+# Super Metroid Item Randomizer
+![Super Metroid Cartridge Artwork](https://cdn02.nintendo-europe.com/media/images/10_share_images/games_15/super_nintendo_5/H2x1_SNES_SuperMetroid_image1600w.jpg)
 
-The randomizer assumes the player is at least capable of wall jumping and shine sparking. Additional strats / glitches can be enabled via difficulty options. There are currently 3 difficulties available: 'novice', 'intermediate' and 'expert'. These affect the number of strats the randomizer will consider enabled. For instance, a difficult strat such as high jump-less lava dive would only be enabled within the 'expert' difficulty.
+## Overview
+This program randomizes the locations of items in the Super Nintendo game Super Metroid. It has built-in logic to ensure the locations chosen for each item will not result in the player getting stuck or 'soft-locked'.
+
+The randomizer assumes the player is at least capable of wall jumping and shine sparking. Additional strats / glitches can be enabled via difficulty options.
+
+The program requires java 12 to build and run.
+
+## Building
+
+Run the following from the root of the project:
+
+```(linux) ./gradlew jar```
+
+```(windows) gradlew jar```
+
+After running this command, a JAR file will be created at ```build/libs/sm-randomizer.jar``` relative to the root of the project.
 
 ## Running
-The default build can be run with the following command:
+The randomizer is run as follows:
 
-```gradlew jar && java -jar build/libs/sm-randomizer.jar```
-
-This will output a JSON object in which the keys are item locations and the values are the items located at those locations.
-
-
-Difficulty can be passed as follows. If not given, it will default to 'novice':
-
-```java -Ddiff=intermediate -jar sm-randomizer.jar```
-
+```java -jar path/to/sm-randomizer.jar path/to/rom/to/patch [--debug] [--diff expert|intermediate|novice]```

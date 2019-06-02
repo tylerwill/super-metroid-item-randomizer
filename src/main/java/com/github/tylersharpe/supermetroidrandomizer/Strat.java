@@ -1,20 +1,18 @@
-package com.github.tylersharpe.smrandomizer;
+package com.github.tylersharpe.supermetroidrandomizer;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.tylersharpe.smrandomizer.Difficulty.*;
-import static com.github.tylersharpe.smrandomizer.Item.*;
+import static com.github.tylersharpe.supermetroidrandomizer.Difficulty.*;
+import static com.github.tylersharpe.supermetroidrandomizer.Item.*;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 public enum Strat {
   MOCKBALL(NOVICE, EnumSet.of(MORPH_BALL)),
-  IBJ(NOVICE, EnumSet.of(BOMBS)),
-  SPEED_BALL(NOVICE, EnumSet.of(MORPH_BALL, SPEED_BOOSTER)),
 
+  IBJ(INTERMEDIATE, EnumSet.of(BOMBS)),
+  SPEED_BALL(INTERMEDIATE, EnumSet.of(MORPH_BALL, SPEED_BOOSTER)),
   GRAVITY_JUMP(INTERMEDIATE, EnumSet.of(GRAVITY_SUIT)),
   SHORT_CHARGE(INTERMEDIATE, EnumSet.of(SPEED_BOOSTER)),
   SPRING_BALL_DOUBLE_JUMP(INTERMEDIATE, EnumSet.of(SPRING_BALL)),

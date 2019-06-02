@@ -1,3 +1,3 @@
-package com.github.tylersharpe.smrandomizer;
+package com.github.tylersharpe.supermetroidrandomizer;
 
 public enum Difficulty { NOVICE, INTERMEDIATE, EXPERT }
