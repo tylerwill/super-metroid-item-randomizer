@@ -42,29 +42,28 @@ public enum Item {
   static final Set<Item> MINORS = Stream.of(values()).filter(i -> i.type == MINOR).collect(toCollection(() -> EnumSet.noneOf(Item.class)));
 
   Type type;
-  Set<ProgressionAbility> abilities;
+  Set<ProgressionAbility> abilitiesGranted;
   int numAvailable;
 
-  private int normalHexCode, chozoHexCode, hiddenHexCode;
+  private final int normalHexValue, chozoHexValue, hiddenHexValue;
 
-  Item(Type type, int numAvailable, int normalHexCode, int chozoHexCode, int hiddenHexCode, ProgressionAbility... abilities) {
+  Item(Type type, int numAvailable, int normalHexValue, int chozoHexValue, int hiddenHexValue, ProgressionAbility... abilitiesGranted) {
     this.type = type;
     this.numAvailable = numAvailable;
-    this.normalHexCode = normalHexCode;
-    this.chozoHexCode = chozoHexCode;
-    this.hiddenHexCode = hiddenHexCode;
+    this.normalHexValue = normalHexValue;
+    this.chozoHexValue = chozoHexValue;
+    this.hiddenHexValue = hiddenHexValue;
 
-    this.abilities = EnumSet.noneOf(ProgressionAbility.class);
-    Collections.addAll(this.abilities, abilities);
+    this.abilitiesGranted = EnumSet.noneOf(ProgressionAbility.class);
+    Collections.addAll(this.abilitiesGranted, abilitiesGranted);
   }
 
-  public int getCode(ItemLocation.Type locationType) {
-    switch (locationType) {
-      case CHOZO  : return chozoHexCode;
-      case HIDDEN : return hiddenHexCode;
-      case NORMAL : return normalHexCode;
-      default: throw new RuntimeException();
-    }
+  public int getHexValue(ItemLocation.Type locationType) {
+    return switch (locationType) {
+      case CHOZO -> chozoHexValue;
+      case HIDDEN -> hiddenHexValue;
+      case NORMAL -> normalHexValue;
+    };
   }
 
 }

@@ -4,7 +4,7 @@ plugins {
 
 group 'com.github.tylersharpe'
 
-wrapper.gradleVersion = '5.4.1'
+wrapper.gradleVersion = '6.5'
 
 repositories {
     mavenCentral()
@@ -14,9 +14,4 @@ jar {
     manifest {
         attributes 'Main-Class': 'com.github.tylersharpe.supermetroidrandomizer.Main'
     }
-}
-
-task deploy(group: 'build', dependsOn: jar, type: Copy) {
-    from jar
-    into new File(System.getenv('USERPROFILE'), 'Development/bin')
 }

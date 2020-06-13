@@ -31,7 +31,7 @@ final class Seed {
       for (ItemLocation seedableLocation : seedableLocations) {
         List<Item> itemsCanSeedHere = remainingItemsToSeed.stream()
                 .filter(item -> item.type == seedableLocation.itemType)
-                .filter(item -> !seedableLocation.blacklist.contains(item))
+                .filter(item -> !seedableLocation.itemBlacklist.contains(item))
                 .filter(item -> {
                   Collection<Item> potentialItems = Util.concat(seededItems.values(), item);
                   Set<ProgressionAbility> potentialAbilities = ProgressionAbility.allUnlockedWith(potentialItems);
@@ -82,7 +82,7 @@ final class Seed {
       debugOut.accept(() -> "");
 
       debugOut.accept(() -> "Seedable items:");
-      seedableItemsByLocation.forEach((loc, items) -> debugOut.accept(() -> loc + " -> " + new HashSet<>(items)));
+      seedableItemsByLocation.forEach((location, items) -> debugOut.accept(() -> location + " -> " + new HashSet<>(items)));
       debugOut.accept(() -> "");
 
       debugOut.accept(() -> "Available progression by item:");
@@ -90,7 +90,7 @@ final class Seed {
       debugOut.accept(() -> "");
 
       debugOut.accept(() -> "Available progression by location:");
-      progressionByLocation.forEach((loc, opened) -> debugOut.accept(() -> loc + " -> " + opened));
+      progressionByLocation.forEach((location, opened) -> debugOut.accept(() -> location + " -> " + opened));
       debugOut.accept(() -> "");
 
       ItemLocation locationToSeed;
@@ -103,7 +103,9 @@ final class Seed {
 
         if (seededItems.values().containsAll(Item.MINORS)) {
           debugOut.accept(() -> "All minors have been seeded, progression item must unlock a major location");
-          progressionItems = progressionItems.filter(item -> progressionByItem.get(item).stream().anyMatch(location -> location.itemType == Item.Type.MAJOR));
+          progressionItems = progressionItems.filter(progressionItem ->
+              progressionByItem.get(progressionItem).stream().anyMatch(location -> location.itemType == Item.Type.MAJOR)
+          );
         }
 
         itemsCanSeed = progressionItems.collect(toList());

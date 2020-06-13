@@ -30,7 +30,7 @@ public enum ProgressionAbility {
 
   static Set<ProgressionAbility> allUnlockedWith(Collection<Item> items) {
     return items.stream()
-            .flatMap(item -> item.abilities.stream())
+            .flatMap(item -> item.abilitiesGranted.stream())
             .collect(toCollection(() -> EnumSet.noneOf(ProgressionAbility.class)));
   }
 

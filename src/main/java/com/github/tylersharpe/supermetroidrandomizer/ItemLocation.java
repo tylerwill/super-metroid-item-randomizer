@@ -343,7 +343,7 @@ public enum ItemLocation {
       CHOZO,
       0x7890e,
       Set.of(),
-          UPPER_RED_TOWER,
+      UPPER_RED_TOWER,
       (a, s) -> a.contains(CLEAR_POWER_BOMB_OBSTRUCTIONS)
   ),
 
@@ -897,23 +897,23 @@ public enum ItemLocation {
   String name;
   Item.Type itemType;
   ItemLocation.Type locationType;
-  Set<Item> blacklist;
+  Set<Item> itemBlacklist;
   ProgressionRule canAccess;
   ProgressionRule canExit;
-  int address;
+  int hexAddress;
 
-  ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int address, ProgressionRule canAccess) {
-    this(name, itemType, locationType, address, Set.of(), canAccess, (a, s) -> true);
+  ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int hexAddress, ProgressionRule canAccess) {
+    this(name, itemType, locationType, hexAddress, Set.of(), canAccess, (a, s) -> true);
   }
 
-  ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int address, Set<Item> blacklist, ProgressionRule canAccess, ProgressionRule canExit) {
+  ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int hexAddress, Set<Item> itemBlacklist, ProgressionRule canAccess, ProgressionRule canExit) {
     this.name = name;
     this.itemType = itemType;
     this.locationType = locationType;
-    this.address = address;
+    this.hexAddress = hexAddress;
     this.canAccess = canAccess;
     this.canExit = canExit;
-    this.blacklist = blacklist;
+    this.itemBlacklist = itemBlacklist;
   }
 
 }
