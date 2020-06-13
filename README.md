@@ -6,7 +6,7 @@ This program randomizes the locations of items in the Super Nintendo game Super 
 
 The randomizer assumes the player is at least capable of wall jumping and shine sparking. Additional strats / glitches can be enabled via difficulty options.
 
-The program requires java 12 to build and run.
+The program requires java 14 to build and run.
 
 ## Building
 
