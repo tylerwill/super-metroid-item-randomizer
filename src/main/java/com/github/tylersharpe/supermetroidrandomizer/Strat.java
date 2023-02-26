@@ -8,38 +8,34 @@ import static com.github.tylersharpe.supermetroidrandomizer.Item.*;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
-public enum Strat {
-    MOCKBALL(NOVICE, EnumSet.of(MORPH_BALL)),
+enum Strat {
+    MOCKBALL(NOVICE, MORPH_BALL),
+    INFINITE_BOMB_JUMP(NOVICE, BOMBS),
 
-    IBJ(INTERMEDIATE, EnumSet.of(BOMBS)),
-    SPEED_BALL(INTERMEDIATE, EnumSet.of(MORPH_BALL, SPEED_BOOSTER)),
-    GRAVITY_JUMP(INTERMEDIATE, EnumSet.of(GRAVITY_SUIT)),
-    SHORT_CHARGE(INTERMEDIATE, EnumSet.of(SPEED_BOOSTER)),
-    SPRING_BALL_DOUBLE_JUMP(INTERMEDIATE, EnumSet.of(SPRING_BALL)),
-    GREEN_GATE_GLITCH(INTERMEDIATE, EnumSet.of(SUPER_MISSILES)),
-    WAVE_GATE_GLITCH(INTERMEDIATE, EnumSet.of(SUPER_MISSILES)),
-    HI_JUMP_LAVA_DIVE(INTERMEDIATE, EnumSet.of(HIGH_JUMP_BOOTS)),
-    ICE_CLIP(INTERMEDIATE, EnumSet.of(ICE_BEAM)),
+    SPEED_BALL(INTERMEDIATE, MORPH_BALL, SPEED_BOOSTER),
+    GRAVITY_JUMP(INTERMEDIATE, GRAVITY_SUIT),
+    SHORT_CHARGE(INTERMEDIATE, SPEED_BOOSTER),
+    SPRING_BALL_DOUBLE_JUMP(INTERMEDIATE, SPRING_BALL),
+    GREEN_GATE_GLITCH(INTERMEDIATE, SUPER_MISSILES),
+    WAVE_GATE_GLITCH(INTERMEDIATE, SUPER_MISSILES),
+    LAVA_DIVE_WITH_HIGH_JUMP(INTERMEDIATE, HIGH_JUMP_BOOTS),
+    ICE_CLIP(INTERMEDIATE, ICE_BEAM),
     HELL_RUNS(INTERMEDIATE),
-    GRAPPLE_GRAVITY_LAUNCH(INTERMEDIATE, EnumSet.of(GRAPPLE_BEAM)),
-    SPIKY_DEATH_POWER_BOMB_ENTRANCE(INTERMEDIATE, EnumSet.of(POWER_BOMBS)),
-    HORIZONTAL_BOMB_JUMP(INTERMEDIATE, EnumSet.of(BOMBS)),
+    GRAPPLE_GRAVITY_LAUNCH(INTERMEDIATE, GRAPPLE_BEAM),
+    SPIKY_DEATH_POWER_BOMB_ENTRANCE(INTERMEDIATE, POWER_BOMBS),
+    HORIZONTAL_BOMB_JUMP(INTERMEDIATE, BOMBS),
     XRAY_DAMAGE_BOOST(INTERMEDIATE),
 
     CONTINUOUS_WALL_JUMP(EXPERT),
-    SUITLESS_MARIDIA(EXPERT, EnumSet.of(HIGH_JUMP_BOOTS, ICE_BEAM, SUPER_MISSILES)),
-    HI_JUMPLESS_LAVA_DIVE(EXPERT);
+    SUITLESS_MARIDIA(EXPERT, HIGH_JUMP_BOOTS, ICE_BEAM, SUPER_MISSILES),
+    LAVA_DIVE_NO_HIGH_JUMP(EXPERT);
 
     final Difficulty minDifficulty;
     final Set<Item> requiredItems;
 
-    Strat(Difficulty minDifficulty) {
-        this(minDifficulty, Set.of());
-    }
-
-    Strat(Difficulty minDifficulty, Set<Item> requiredItems) {
+    Strat(Difficulty minDifficulty, Item... requiredItems) {
         this.minDifficulty = minDifficulty;
-        this.requiredItems = requiredItems;
+        this.requiredItems = EnumSet.copyOf(List.of(requiredItems));
     }
 
     static Set<Strat> getAllowedStrats(Difficulty difficulty) {

@@ -14,8 +14,8 @@ public enum ProgressionAbility {
     BOMBS,
     DESTROY_BOMB_BLOCKS,
     OPEN_RED_DOORS,
-    CLEAR_POWER_BOMB_OBSTRUCTIONS,
-    CLEAR_SUPER_MISSILE_OBSTRUCTIONS,
+    DESTROY_POWER_BOMB_OBSTRUCTIONS,
+    DESTROY_SUPER_MISSILE_OBSTRUCTIONS,
 
     CHARGE_BEAM, // considered a progression ability since it can be essential for late game bosses which don't drop missiles / supers
     WAVE_BEAM,

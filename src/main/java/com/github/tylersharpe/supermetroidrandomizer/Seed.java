@@ -11,11 +11,8 @@ import static java.util.stream.Collectors.*;
 
 final class Seed {
 
-    private Seed() {
-    }
-
     static Map<ItemLocation, Item> createSeed(Set<Strat> allowedStrats, boolean debug) {
-      // Linked hash map preserves order items were seeded in - nice when printing out results
+        // Linked hash map preserves order items were seeded in - nice when printing out results
         LinkedHashMap<ItemLocation, Item> seededItems = new LinkedHashMap<>();
 
         Consumer<Supplier<String>> debugOut = debug ? str -> System.out.println(str.get()) : str -> {};
@@ -36,19 +33,26 @@ final class Seed {
                         .filter(item -> item.type == seedableLocation.itemType)
                         .filter(item -> !seedableLocation.itemBlacklist.contains(item))
                         .filter(item -> {
+                            if (seedableLocation.canExit == AccessPredicate.ALWAYS) {
+                                return true;
+                            }
+
                             Collection<Item> potentialItems = Util.concat(seededItems.values(), item);
                             Set<ProgressionAbility> potentialAbilities = ProgressionAbility.allUnlockedWith(potentialItems);
                             Set<Strat> potentialStrats = Strat.allPerformableWith(allowedStrats, potentialItems);
 
                             return seedableLocation.canExit.test(potentialAbilities, potentialStrats);
-                        }).collect(toList());
+                        }).toList();
 
                 if (itemsCanSeedHere.size() > 0) {
                     seedableItemsByLocation.put(seedableLocation, itemsCanSeedHere);
                 }
             }
 
-            Set<Item> uniqueSeedableItems = seedableItemsByLocation.values().stream().flatMap(Collection::stream).collect(toSet());
+            Set<Item> uniqueSeedableItems = seedableItemsByLocation.values()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .collect(toSet());
 
             Map<Item, Set<ItemLocation>> progressionByItem = new EnumMap<>(Item.class);
             for (Item seedableItem : uniqueSeedableItems) {
@@ -57,8 +61,11 @@ final class Seed {
                 Set<Strat> potentialStrats = Strat.allPerformableWith(allowedStrats, potentialItems);
 
                 Set<ItemLocation> locationsOpened = Stream.of(ItemLocation.values())
-                        .filter(location -> !seededItems.containsKey(location) && !seedableLocations.contains(location)) // Remove locations already open
-                        .filter(location -> location.canAccess.test(potentialAbilities, potentialStrats)) // New locations we could access with this item
+                        // Remove locations already open
+                        .filter(location -> !seededItems.containsKey(location) && !seedableLocations.contains(location))
+
+                        // New locations we could access with this item
+                        .filter(location -> location.canAccess.test(potentialAbilities, potentialStrats))
                         .collect(toSet());
 
                 if (locationsOpened.size() > 0) {
