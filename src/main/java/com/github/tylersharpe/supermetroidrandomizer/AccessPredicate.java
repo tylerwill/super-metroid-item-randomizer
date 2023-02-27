@@ -18,20 +18,20 @@ interface AccessPredicate {
 
     AccessPredicate GREEN_HILLS =
             BIG_PINK.and((a, s) -> a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)) // Vanilla access
-                    .or(ZEBES_AWAKE.and((a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS))); // Meme route
+                    .or(ZEBES_AWAKE.and((a, s) -> a.contains(POWER_BOMBS))); // Meme route
 
-    AccessPredicate ETECOONS = BRINSTAR_PARLOR.and((a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS));
+    AccessPredicate ETECOONS = BRINSTAR_PARLOR.and((a, s) -> a.contains(POWER_BOMBS));
 
     AccessPredicate UPPER_RED_TOWER =
             GREEN_HILLS.and((a, s) -> a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)) // Vanilla access
-                    .or((a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)); // Access from upper crateria
+                    .or((a, s) -> a.contains(POWER_BOMBS) && a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)); // Access from upper crateria
 
     AccessPredicate LOWER_RED_TOWER = UPPER_RED_TOWER.and((a, s) -> a.contains(DESTROY_BOMB_BLOCKS));
 
     AccessPredicate HEATED_UPPER_NORFAIR = LOWER_RED_TOWER.and((a, s) -> a.contains(VARIA) || s.contains(HELL_RUNS));
 
     AccessPredicate LOWER_NORFAIR = HEATED_UPPER_NORFAIR.and((a, s) ->
-        a.contains(VARIA) && a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && (
+        a.contains(VARIA) && a.contains(POWER_BOMBS) && (
             (a.contains(GRAVITY) && a.contains(SPACE_JUMP)) || // Vanilla access
             s.contains(GRAVITY_JUMP) || // Gravity jump
             (s.contains(LAVA_DIVE_NO_HIGH_JUMP) || s.contains(LAVA_DIVE_WITH_HIGH_JUMP)) // Lava dives
@@ -46,7 +46,7 @@ interface AccessPredicate {
     );
 
     AccessPredicate GREEN_MARIDIA_ENTRY = LOWER_RED_TOWER.and((a, s) ->
-        a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && (a.contains(HIGH_JUMP) || a.contains(GRAVITY))
+        a.contains(POWER_BOMBS) && (a.contains(HIGH_JUMP) || a.contains(GRAVITY))
     );
 
     AccessPredicate GREEN_MARIDIA_FULL = GREEN_MARIDIA_ENTRY.and((a, s) ->
@@ -61,9 +61,7 @@ interface AccessPredicate {
         (s.contains(ICE_CLIP) && a.contains(GRAVITY)) // Ice clip if lacking speed booster
     );
 
-    AccessPredicate MOAT = ZEBES_AWAKE.and((a, s) ->
-        a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)
-    );
+    AccessPredicate MOAT = (a, s) -> a.contains(POWER_BOMBS) && a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS);
 
     AccessPredicate WRECKED_SHIP = MOAT.and((a, s) ->
         a.contains(GRAPPLE) || s.contains(CONTINUOUS_WALL_JUMP) || s.contains(HORIZONTAL_BOMB_JUMP)

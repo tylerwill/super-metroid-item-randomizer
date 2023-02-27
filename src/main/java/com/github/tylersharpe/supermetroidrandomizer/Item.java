@@ -36,7 +36,7 @@ public enum Item {
     SUPER_MISSILES(MINOR, 10, 0xdfee, 0x33ef, 0x87ef,
             ProgressionAbility.OPEN_RED_DOORS, ProgressionAbility.DESTROY_SUPER_MISSILE_OBSTRUCTIONS),
     POWER_BOMBS(MINOR, 10, 0xe3ee, 0x37ef, 0x8bef,
-            ProgressionAbility.DESTROY_BOMB_BLOCKS, ProgressionAbility.DESTROY_POWER_BOMB_OBSTRUCTIONS),
+            ProgressionAbility.DESTROY_BOMB_BLOCKS, ProgressionAbility.POWER_BOMBS),
     GRAPPLE_BEAM(MAJOR, 1, 0x17ef, 0x6bef, 0xbfef, ProgressionAbility.GRAPPLE),
     XRAY(MAJOR, 1, 0x0fef, 0x63ef, 0xb7ef);
 

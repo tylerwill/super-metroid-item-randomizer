@@ -38,7 +38,13 @@ public enum ItemLocation {
         HIDDEN,
         0x7879e,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (a, s) -> a.contains(OPEN_RED_DOORS),
+        (a, s) -> a.contains(OPEN_RED_DOORS) && (
+            // vanilla
+            (a.contains(HIGH_JUMP)) ||
+
+            // IBJ
+            (s.contains(INFINITE_BOMB_JUMP) && a.contains(MORPH) && a.contains(ProgressionAbility.BOMBS))
+        ),
         ALWAYS
     ),
 
@@ -47,7 +53,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78798,
-        BLUE_BRINSTAR_ENERGY_TANK.canAccess.and((a, s) -> a.contains(MORPH))
+        (a, s) -> a.contains(OPEN_RED_DOORS) && a.contains(MORPH)
     ),
 
     BILLIE_MAYS_MISSILES_1(
@@ -55,11 +61,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78836,
-        BLUE_BRINSTAR_ENERGY_TANK.canAccess.and((a, s) ->
-            a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) &&
-            a.contains(ProgressionAbility.SPEED_BOOSTER) &&
-            a.contains(GRAVITY)
-        )
+        (a, s) -> a.contains(OPEN_RED_DOORS) &&
+            a.contains(ProgressionAbility.POWER_BOMBS) &&
+            a.contains(ProgressionAbility.SPEED_BOOSTER)
     ),
 
     BILLIE_MAYS_MISSILES_2(
@@ -75,7 +79,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7874c,
-        (a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS)
+        (a, s) -> a.contains(ProgressionAbility.POWER_BOMBS)
     ),
 
     /****************************** West Crateria ******************************/
@@ -84,7 +88,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x783ee,
-        ZEBES_AWAKE.and((a, s) -> a.contains(DESTROY_BOMB_BLOCKS))
+        (a, s) -> a.contains(DESTROY_BOMB_BLOCKS)
     ),
 
     CRATERIA_CLIMB_SUPERS(
@@ -92,10 +96,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78478,
-        ZEBES_AWAKE.and((a, s) ->
-            a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) &&
+        (a, s) -> a.contains(ProgressionAbility.POWER_BOMBS) &&
             a.contains(ProgressionAbility.SPEED_BOOSTER) &&
-            a.contains(ProgressionAbility.ICE_BEAM)
+            (a.contains(ProgressionAbility.ICE_BEAM) || s.contains(SHORT_CHARGE)
         )
     ),
 
@@ -105,16 +108,18 @@ public enum ItemLocation {
         CHOZO,
         0x78404,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        ZEBES_AWAKE.and((a, s) -> a.contains(OPEN_RED_DOORS)),
+        (a, s) -> a.contains(MORPH) && a.contains(OPEN_RED_DOORS),
         ALWAYS
     ),
 
-    CRATERIA_BUSINESS_CENTER_MISSILES(
-            "Missiles (Crateria business center)",
-            MINOR,
-            NORMAL,
-            0x78486,
-            ZEBES_AWAKE.and((a, s) -> a.contains(MORPH) && a.contains(DESTROY_BOMB_BLOCKS))
+    CRATERIA_PARLOR_MISSILES(
+        "Missiles (Crateria parlor)",
+        MINOR,
+        NORMAL,
+        0x78486,
+        (a, s) -> a.contains(MORPH) && (
+            a.contains(ProgressionAbility.BOMBS) || a.contains(ProgressionAbility.POWER_BOMBS)
+        )
     ),
 
     LANDING_SITE_POWER_BOMBS(
@@ -122,21 +127,21 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x781cc,
-        ZEBES_AWAKE.and((a, s) ->
-            a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && (
+        (a, s) ->
+            a.contains(ProgressionAbility.POWER_BOMBS) && (
                 a.contains(ProgressionAbility.SPEED_BOOSTER) ||
                 a.contains(ProgressionAbility.SPACE_JUMP) ||
-                a.contains(ProgressionAbility.BOMBS)
+                (a.contains(ProgressionAbility.BOMBS) && s.contains(INFINITE_BOMB_JUMP))
             )
-        )),
+        ),
 
-    GAUNTLET(
+    GAUNTLET_ENERGY_TANK(
         "Energy Tank (gauntlet)",
         MAJOR,
         NORMAL,
         0x78264,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        ZEBES_AWAKE.and((a, s) -> a.contains(DESTROY_BOMB_BLOCKS)),
+        (a, s) -> a.contains(DESTROY_BOMB_BLOCKS),
         ALWAYS
     ),
 
@@ -145,7 +150,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7846a,
-        GAUNTLET.canAccess.and((a, s) -> a.contains(MORPH) && a.contains(DESTROY_BOMB_BLOCKS))
+        GAUNTLET_ENERGY_TANK.canAccess.and((a, s) -> a.contains(MORPH) && (
+            a.contains(ProgressionAbility.BOMBS) || a.contains(ProgressionAbility.POWER_BOMBS))
+        )
     ),
 
     GAUNTLET_MISSILES_RIGHT(
@@ -162,7 +169,7 @@ public enum ItemLocation {
         NORMAL,
         0x78432,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        ZEBES_AWAKE.and((a, s) -> a.contains(DESTROY_BOMB_BLOCKS) || s.contains(SHORT_CHARGE)),
+        (a, s) -> a.contains(DESTROY_BOMB_BLOCKS) || s.contains(SHORT_CHARGE),
         ALWAYS
     ),
 
@@ -282,7 +289,7 @@ public enum ItemLocation {
         NORMAL,
         0x78824,
         BIG_PINK.and((a, s) ->
-            a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && (
+            a.contains(ProgressionAbility.POWER_BOMBS) && (
                 s.contains(WAVE_GATE_GLITCH) || a.contains(ProgressionAbility.WAVE_BEAM)
             )
         )
@@ -301,7 +308,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7865c,
-        BIG_PINK_GRAPPLE_MISSILES.canAccess.and((a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS))
+        BIG_PINK_GRAPPLE_MISSILES.canAccess.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
     ),
 
     CHARGE_MISSILES(
@@ -326,7 +333,7 @@ public enum ItemLocation {
         NORMAL,
         0x787fa,
         CHARGE_BEAM.canAccess.and((a, s) ->
-            a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && (
+            a.contains(ProgressionAbility.POWER_BOMBS) && (
                 s.contains(SHORT_CHARGE) || (a.contains(GRAVITY) && a.contains(ProgressionAbility.SPEED_BOOSTER))
             )
         )
@@ -347,7 +354,7 @@ public enum ItemLocation {
         CHOZO,
         0x78876,
         UPPER_RED_TOWER.and((a, s) ->
-            a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && (
+            a.contains(ProgressionAbility.POWER_BOMBS) && (
                 a.contains(ProgressionAbility.GRAPPLE) || s.contains(XRAY_DAMAGE_BOOST)
             )
         )
@@ -360,7 +367,7 @@ public enum ItemLocation {
         0x7890e,
         Set.of(),
         UPPER_RED_TOWER,
-        (a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS)
+        (a, s) -> a.contains(ProgressionAbility.POWER_BOMBS)
     ),
 
     ALPHA_POWER_BOMBS_MISSILES(
@@ -368,7 +375,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78914,
-        ALPHA_POWER_BOMBS.canAccess.and((a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS))
+        ALPHA_POWER_BOMBS.canAccess.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
     ),
 
     BIG_HOPPER_POWER_BOMBS(
@@ -376,7 +383,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x788ca,
-        ALPHA_POWER_BOMBS.canAccess.and((a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS))
+        ALPHA_POWER_BOMBS.canAccess.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
     ),
 
     SPAZER(
@@ -392,7 +399,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x789ec,
-        LOWER_RED_TOWER.and((a, s) -> a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS))
+        LOWER_RED_TOWER.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
     ),
 
     KRAID_WAREHOUSE(
@@ -446,7 +453,7 @@ public enum ItemLocation {
             (HEATED_UPPER_NORFAIR.test(a, s) && (a.contains(ProgressionAbility.GRAPPLE) || a.contains(ProgressionAbility.SPACE_JUMP))) ||
 
             // Access with green gate glitch
-            (a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && s.contains(GREEN_GATE_GLITCH))
+            (a.contains(ProgressionAbility.POWER_BOMBS) && s.contains(GREEN_GATE_GLITCH))
         )
     ),
 
@@ -464,7 +471,7 @@ public enum ItemLocation {
         HIDDEN,
         0x78b46,
         LOWER_RED_TOWER.and((a, s) ->
-            a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && (
+            a.contains(ProgressionAbility.POWER_BOMBS) && (
                 a.contains(ProgressionAbility.SPEED_BOOSTER) || s.contains(MOCKBALL)
             )
         )
@@ -505,7 +512,7 @@ public enum ItemLocation {
         0x78c2a,
         HEATED_UPPER_NORFAIR.and((a, s) ->
             s.contains(INFINITE_BOMB_JUMP) || (
-                a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && a.contains(ProgressionAbility.SPEED_BOOSTER)
+                a.contains(ProgressionAbility.POWER_BOMBS) && a.contains(ProgressionAbility.SPEED_BOOSTER)
             )
         )
     ),
@@ -517,7 +524,7 @@ public enum ItemLocation {
         0x78c36,
         HEATED_UPPER_NORFAIR.and((a, s) ->
             // Vanilla access
-            (a.contains(DESTROY_POWER_BOMB_OBSTRUCTIONS) && a.contains(ProgressionAbility.SPEED_BOOSTER)) ||
+            (a.contains(ProgressionAbility.POWER_BOMBS) && a.contains(ProgressionAbility.SPEED_BOOSTER)) ||
 
             // Entering from behind
             (s.contains(GREEN_GATE_GLITCH))
@@ -720,7 +727,7 @@ public enum ItemLocation {
         GREEN_MARIDIA_FULL
     ),
 
-    MAMA_TURTLE_ETANK(
+    MAMA_TURTLE_ENERGY_TANK(
         "Energy Tank (mama turtle)",
         MAJOR,
         NORMAL,
