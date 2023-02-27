@@ -1,47 +1,35 @@
 package com.github.tylersharpe.supermetroidrandomizer;
 
 import java.util.*;
-import java.util.stream.Stream;
 
-import static com.github.tylersharpe.supermetroidrandomizer.Difficulty.*;
 import static com.github.tylersharpe.supermetroidrandomizer.Item.*;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 enum Strat {
-    MOCKBALL(NOVICE, MORPH_BALL),
-    INFINITE_BOMB_JUMP(NOVICE, BOMBS),
+    MOCKBALL(MORPH_BALL),
+    INFINITE_BOMB_JUMP(BOMBS),
+    SPEED_BALL(MORPH_BALL, SPEED_BOOSTER),
+    GRAVITY_JUMP(GRAVITY_SUIT),
+    SHORT_CHARGE(SPEED_BOOSTER),
+    SPRING_BALL_DOUBLE_JUMP(SPRING_BALL),
+    GREEN_GATE_GLITCH(SUPER_MISSILES),
+    WAVE_GATE_GLITCH(SUPER_MISSILES),
+    LAVA_DIVE_WITH_HIGH_JUMP(HIGH_JUMP_BOOTS),
+    ICE_CLIP(ICE_BEAM),
+    HELL_RUNS,
+    GRAPPLE_GRAVITY_LAUNCH(GRAPPLE_BEAM),
+    SPIKY_DEATH_POWER_BOMB_ENTRANCE(POWER_BOMBS),
+    HORIZONTAL_BOMB_JUMP(BOMBS),
+    XRAY_DAMAGE_BOOST,
+    CONTINUOUS_WALL_JUMP,
+    SUITLESS_MARIDIA(HIGH_JUMP_BOOTS, ICE_BEAM, SUPER_MISSILES),
+    LAVA_DIVE_NO_HIGH_JUMP;
 
-    SPEED_BALL(INTERMEDIATE, MORPH_BALL, SPEED_BOOSTER),
-    GRAVITY_JUMP(INTERMEDIATE, GRAVITY_SUIT),
-    SHORT_CHARGE(INTERMEDIATE, SPEED_BOOSTER),
-    SPRING_BALL_DOUBLE_JUMP(INTERMEDIATE, SPRING_BALL),
-    GREEN_GATE_GLITCH(INTERMEDIATE, SUPER_MISSILES),
-    WAVE_GATE_GLITCH(INTERMEDIATE, SUPER_MISSILES),
-    LAVA_DIVE_WITH_HIGH_JUMP(INTERMEDIATE, HIGH_JUMP_BOOTS),
-    ICE_CLIP(INTERMEDIATE, ICE_BEAM),
-    HELL_RUNS(INTERMEDIATE),
-    GRAPPLE_GRAVITY_LAUNCH(INTERMEDIATE, GRAPPLE_BEAM),
-    SPIKY_DEATH_POWER_BOMB_ENTRANCE(INTERMEDIATE, POWER_BOMBS),
-    HORIZONTAL_BOMB_JUMP(INTERMEDIATE, BOMBS),
-    XRAY_DAMAGE_BOOST(INTERMEDIATE),
-
-    CONTINUOUS_WALL_JUMP(EXPERT),
-    SUITLESS_MARIDIA(EXPERT, HIGH_JUMP_BOOTS, ICE_BEAM, SUPER_MISSILES),
-    LAVA_DIVE_NO_HIGH_JUMP(EXPERT);
-
-    final Difficulty minDifficulty;
     final Set<Item> requiredItems;
 
-    Strat(Difficulty minDifficulty, Item... requiredItems) {
-        this.minDifficulty = minDifficulty;
+    Strat(Item... requiredItems) {
         this.requiredItems = EnumSet.copyOf(List.of(requiredItems));
-    }
-
-    static Set<Strat> getAllowedStrats(Difficulty difficulty) {
-        return Stream.of(values())
-                .filter(strat -> strat.minDifficulty.ordinal() <= difficulty.ordinal())
-                .collect(toCollection(() -> EnumSet.noneOf(Strat.class)));
     }
 
     static Set<Strat> allPerformableWith(Set<Strat> allPossibleStrats, Collection<Item> withItems) {

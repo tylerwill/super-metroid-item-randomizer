@@ -12,8 +12,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         ParsedArgs parsedArgs = ParsedArgs.parse(args);
 
-        Difficulty difficulty = Difficulty.valueOf(parsedArgs.namedArgs.getOrDefault("diff", Difficulty.NOVICE.name()));
-        Set<Strat> allowedStrats = Strat.getAllowedStrats(difficulty);
+        // TODO allow strats to be specified from command line
+        Set<Strat> allowedStrats = Set.of(Strat.values());
 
         boolean debug = parsedArgs.switches.contains("debug");
         Map<ItemLocation, Item> seed = Seed.createSeed(allowedStrats, debug);
