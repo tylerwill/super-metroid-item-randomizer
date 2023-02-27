@@ -23,7 +23,7 @@ final class Seed {
 
         Set<Strat> initialStrats = Strat.allPerformableWith(allowedStrats, Set.of());
         List<ItemLocation> seedableLocations = Stream.of(ItemLocation.values())
-                .filter(location -> location.canAccess.test(Set.of(), initialStrats) && location.canExit.test(Set.of(), initialStrats))
+                .filter(location -> location.requiredAccessState.matches(Set.of(), initialStrats) && location.requiredExitState.matches(Set.of(), initialStrats))
                 .collect(toList());
 
         while (remainingItemsToSeed.size() > 0) {
@@ -33,13 +33,13 @@ final class Seed {
                         .filter(item -> item.type == seedableLocation.itemType)
                         .filter(item -> !seedableLocation.itemBlacklist.contains(item))
                         .filter(item -> {
-                            if (seedableLocation.canExit == AccessPredicate.ALWAYS) {
+                            if (seedableLocation.requiredExitState == PlayerState.ANY) {
                                 return true;
                             }
 
                             Collection<Item> potentialItems = Util.concat(seededItems.values(), item);
                             Set<Strat> potentialStrats = Strat.allPerformableWith(allowedStrats, potentialItems);
-                            return seedableLocation.canExit.test(potentialItems, potentialStrats);
+                            return seedableLocation.requiredExitState.matches(potentialItems, potentialStrats);
                         }).toList();
 
                 if (itemsCanSeedHere.size() > 0) {
@@ -62,7 +62,7 @@ final class Seed {
                         .filter(location -> !seededItems.containsKey(location) && !seedableLocations.contains(location))
 
                         // New locations we could access with this item
-                        .filter(location -> location.canAccess.test(potentialItems, potentialStrats))
+                        .filter(location -> location.requiredAccessState.matches(potentialItems, potentialStrats))
                         .collect(toSet());
 
                 if (locationsOpened.size() > 0) {

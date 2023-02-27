@@ -3,11 +3,11 @@ package com.github.tylersharpe.supermetroidrandomizer;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static com.github.tylersharpe.supermetroidrandomizer.AccessPredicate.*;
 import static com.github.tylersharpe.supermetroidrandomizer.Item.Type.MAJOR;
 import static com.github.tylersharpe.supermetroidrandomizer.Item.Type.MINOR;
 import static com.github.tylersharpe.supermetroidrandomizer.Item.VARIA_SUIT;
 import static com.github.tylersharpe.supermetroidrandomizer.ItemLocation.Type.*;
+import static com.github.tylersharpe.supermetroidrandomizer.PlayerState.*;
 import static com.github.tylersharpe.supermetroidrandomizer.Strat.*;
 
 public enum ItemLocation {
@@ -19,8 +19,8 @@ public enum ItemLocation {
         NORMAL,
         0x786de,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        ALWAYS,
-        ALWAYS
+        ANY,
+        ANY
     ),
 
     ALPHA_MISSILES(
@@ -37,14 +37,16 @@ public enum ItemLocation {
         HIDDEN,
         0x7879e,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (i, s) -> i.contains(Item.MISSILES) && (
-            // vanilla
-            (i.contains(Item.HIGH_JUMP_BOOTS)) ||
+        CAN_OPEN_RED_DOORS.and((i, s) ->
+            i.contains(Item.MISSILES) && (
+                // vanilla
+                i.contains(Item.HIGH_JUMP_BOOTS) ||
 
-            // IBJ
-            (s.contains(INFINITE_BOMB_JUMP) && i.contains(Item.MORPH_BALL) && i.contains(Item.BOMBS))
+                // IBJ
+                s.contains(INFINITE_BOMB_JUMP)
+            )
         ),
-        ALWAYS
+        ANY
     ),
 
     BLUE_BRINSTAR_FAR_RIGHT_MISSILES(
@@ -60,7 +62,10 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78836,
-        (i, s) -> i.contains(Item.MISSILES) && i.contains(Item.POWER_BOMBS) && i.contains(Item.SPEED_BOOSTER)
+        (i, s) -> i.contains(Item.MISSILES)
+            && i.contains(Item.MORPH_BALL)
+            && i.contains(Item.POWER_BOMBS)
+            && i.contains(Item.SPEED_BOOSTER)
     ),
 
     BILLIE_MAYS_MISSILES_2(
@@ -68,7 +73,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x7883c,
-        BILLIE_MAYS_MISSILES_1.canAccess
+        BILLIE_MAYS_MISSILES_1.requiredAccessState
     ),
 
     BLUE_BRINSTAR_POWER_BOMBS(
@@ -76,7 +81,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7874c,
-        (i, s) -> i.contains(Item.POWER_BOMBS)
+        (i, s) -> i.contains(Item.MORPH_BALL) && i.contains(Item.POWER_BOMBS)
     ),
 
     /****************************** West Crateria ******************************/
@@ -85,7 +90,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x783ee,
-        AccessPredicate.DESTROY_BOMB_BLOCKS
+        PlayerState.CAN_LAY_ANY_BOMB_TYPE
     ),
 
     CRATERIA_CLIMB_SUPERS(
@@ -93,10 +98,10 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78478,
-        (i, s) -> i.contains(Item.POWER_BOMBS) &&
-            i.contains(Item.SPEED_BOOSTER) &&
-            (i.contains(Item.ICE_BEAM) || s.contains(SHORT_CHARGE)
-        )
+        (i, s) -> i.contains(Item.POWER_BOMBS)
+            && i.contains(Item.MORPH_BALL)
+            && i.contains(Item.SPEED_BOOSTER)
+            && (i.contains(Item.ICE_BEAM) || s.contains(SHORT_CHARGE))
     ),
 
     BOMBS(
@@ -106,7 +111,7 @@ public enum ItemLocation {
         0x78404,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
         (i, s) -> i.contains(Item.MORPH_BALL) && i.contains(Item.MISSILES),
-        ALWAYS
+        ANY
     ),
 
     CRATERIA_PARLOR_MISSILES(
@@ -114,9 +119,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78486,
-        (i, s) -> i.contains(Item.MORPH_BALL) && (
-            i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS)
-        )
+        PlayerState.CAN_LAY_ANY_BOMB_TYPE
     ),
 
     LANDING_SITE_POWER_BOMBS(
@@ -128,7 +131,7 @@ public enum ItemLocation {
             i.contains(Item.POWER_BOMBS) && (
                 i.contains(Item.SPEED_BOOSTER) ||
                 i.contains(Item.SPACE_JUMP) ||
-                (i.contains(Item.BOMBS) && s.contains(INFINITE_BOMB_JUMP))
+                s.contains(INFINITE_BOMB_JUMP)
             )
         ),
 
@@ -138,8 +141,8 @@ public enum ItemLocation {
         NORMAL,
         0x78264,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        AccessPredicate.DESTROY_BOMB_BLOCKS,
-        ALWAYS
+        PlayerState.CAN_DESTROY_BOMB_BLOCKS,
+        ANY
     ),
 
     GAUNTLET_MISSILES_LEFT(
@@ -147,9 +150,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7846a,
-        GAUNTLET_ENERGY_TANK.canAccess.and((i, s) -> i.contains(Item.MORPH_BALL) && (
-            i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS))
-        )
+        GAUNTLET_ENERGY_TANK.requiredAccessState.and(PlayerState.CAN_LAY_ANY_BOMB_TYPE)
     ),
 
     GAUNTLET_MISSILES_RIGHT(
@@ -157,7 +158,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7846a,
-        GAUNTLET_MISSILES_LEFT.canAccess
+        GAUNTLET_MISSILES_LEFT.requiredAccessState
     ),
 
     TERMINATOR(
@@ -166,9 +167,8 @@ public enum ItemLocation {
         NORMAL,
         0x78432,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        AccessPredicate.DESTROY_BOMB_BLOCKS
-                .or((i, s) -> i.contains(Item.SPEED_BOOSTER) && s.contains(SHORT_CHARGE)),
-        ALWAYS
+        PlayerState.CAN_DESTROY_BOMB_BLOCKS.or((i, s) -> s.contains(SHORT_CHARGE)),
+        ANY
     ),
 
     /****************************** East Crateria ******************************/
@@ -177,7 +177,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78248,
-        MOAT
+        PlayerState.CAN_ACCESS_CRATERIA_MOAT
     ),
 
     OCEAN_LOWER_MISSILES(
@@ -185,7 +185,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x781e8,
-        WRECKED_SHIP
+        CAN_ACCESS_WEST_WRECKED_SHIP_ENTRANCE.and(CAN_LAY_ANY_BOMB_TYPE)
     ),
 
     OCEAN_MID_MISSILES(
@@ -193,7 +193,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x781f4,
-        WRECKED_SHIP
+        CAN_ACCESS_WEST_WRECKED_SHIP_ENTRANCE.and((i, s) -> i.contains(Item.SUPER_MISSILES))
     ),
 
     OCEAN_TOP_MISSILES(
@@ -201,7 +201,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x781ee,
-        WRECKED_SHIP
+        CAN_ACCESS_WEST_WRECKED_SHIP_ENTRANCE
     ),
 
     /****************************** Green / pink Brinstar ******************************/
@@ -210,7 +210,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78518,
-        BRINSTAR_PARLOR.and((i, s) -> i.contains(Item.MISSILES))
+        Set.of(),
+        CAN_DESTROY_BOMB_BLOCKS.and(CAN_OPEN_RED_DOORS),
+        CAN_LAY_ANY_BOMB_TYPE
     ),
 
     EARLY_SUPERS_SUPER_MISSILES(
@@ -218,19 +220,21 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7851e,
-        BRINSTAR_PARLOR.and((i, s) ->
-            i.contains(Item.MISSILES) && (
-                i.contains(Item.SPEED_BOOSTER) || s.contains(MOCKBALL)
-            )
+        EARLY_SUPERS_RUNWAY_MISSILES.requiredAccessState.and((i, s) ->
+            // vanilla
+            i.contains(Item.SPEED_BOOSTER) ||
+
+            // mockball from parlor running start
+            s.contains(MOCKBALL)
         )
     ),
 
-    GREEN_BRINSTAR_RESERVE(
-        "Reserve Tank (Brinstar)",
+    BRINSTAR_PARLOR_RESERVE(
+        "Reserve Tank (Brinstar parlor)",
         MAJOR,
         CHOZO,
         0x7852c,
-        EARLY_SUPERS_SUPER_MISSILES.canAccess
+        EARLY_SUPERS_SUPER_MISSILES.requiredAccessState
     ),
 
     EARLY_SUPERS_SECRET_MISSILES_1(
@@ -238,7 +242,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78538,
-        EARLY_SUPERS_SUPER_MISSILES.canAccess
+        EARLY_SUPERS_SUPER_MISSILES.requiredAccessState.and((i, s) -> i.contains(Item.MORPH_BALL))
     ),
 
     EARLY_SUPERS_SECRET_MISSILES_2(
@@ -246,8 +250,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x78532,
-        EARLY_SUPERS_SUPER_MISSILES.canAccess
-            .and((i, s) -> i.contains(Item.MORPH_BALL) && (i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS)))
+        EARLY_SUPERS_SECRET_MISSILES_1.requiredAccessState.and(CAN_LAY_ANY_BOMB_TYPE)
     ),
 
     ETECOONS_ENERGY_TANK(
@@ -255,7 +258,7 @@ public enum ItemLocation {
         MAJOR,
         NORMAL,
         0x787c2,
-        ETECOONS
+        CAN_DESTROY_BOMB_BLOCKS.and((i, s) -> i.contains(Item.MORPH_BALL) && i.contains(Item.POWER_BOMBS))
     ),
 
     ETECOONS_SUPER_MISSILES(
@@ -263,7 +266,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x787d0,
-        ETECOONS
+        ETECOONS_ENERGY_TANK.requiredAccessState
     ),
 
     ETECOONS_POWER_BOMBS(
@@ -271,7 +274,7 @@ public enum ItemLocation {
         MINOR,
         CHOZO,
         0x784ac,
-        ETECOONS
+        ETECOONS_ENERGY_TANK.requiredAccessState
     ),
 
     BIG_PINK_GRAPPLE_MISSILES(
@@ -279,19 +282,17 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78608,
-            BRINSTAR_PINK_MOUNTAIN
+        CAN_ACCESS_BRINSTAR_BIG_PINK
     ),
 
-    WAVE_GATE(
+    BRINSTAR_WAVE_GATE_ENERGY_TANK(
         "Energy Tank (wave gate)",
         MAJOR,
         NORMAL,
         0x78824,
-        BRINSTAR_PINK_MOUNTAIN.and((i, s) ->
-            i.contains(Item.POWER_BOMBS) && (
-                s.contains(WAVE_GATE_GLITCH) || i.contains(Item.WAVE_BEAM)
-            )
-        )
+        CAN_ACCESS_BRINSTAR_BIG_PINK
+            .and(CAN_LAY_POWER_BOMBS)
+            .and((i, s) -> i.contains(Item.WAVE_BEAM) || s.contains(WAVE_GATE_GLITCH))
     ),
 
     ALPHA_SUPERS(
@@ -299,7 +300,9 @@ public enum ItemLocation {
         MINOR,
         CHOZO,
         0x784e4,
-        BRINSTAR_PINK_MOUNTAIN
+        Set.of(),
+        CAN_ACCESS_BRINSTAR_BIG_PINK,
+        PlayerState.CAN_LAY_ANY_BOMB_TYPE.and((i, s) -> i.contains(Item.SUPER_MISSILES))
     ),
 
     MISSION_IMPOSSIBLE_POWER_BOMBS(
@@ -307,7 +310,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7865c,
-        BIG_PINK_GRAPPLE_MISSILES.canAccess.and((i, s) -> i.contains(Item.POWER_BOMBS))
+        BIG_PINK_GRAPPLE_MISSILES.requiredAccessState.and(CAN_LAY_POWER_BOMBS)
     ),
 
     CHARGE_MISSILES(
@@ -315,7 +318,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7860e,
-            BRINSTAR_PINK_MOUNTAIN
+        CAN_ACCESS_BRINSTAR_BIG_PINK
     ),
 
     CHARGE_BEAM(
@@ -323,9 +326,7 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78614,
-        BRINSTAR_PINK_MOUNTAIN.and((i, s) ->
-            i.contains(Item.MORPH_BALL) && (i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS))
-        )
+        CAN_ACCESS_BRINSTAR_BIG_PINK.and(CAN_LAY_ANY_BOMB_TYPE)
     ),
 
     WATERWAY(
@@ -333,11 +334,9 @@ public enum ItemLocation {
         MAJOR,
         NORMAL,
         0x787fa,
-        CHARGE_BEAM.canAccess.and((i, s) ->
-            i.contains(Item.POWER_BOMBS) && (
-                s.contains(SHORT_CHARGE) || (i.contains(Item.GRAVITY_SUIT) && i.contains(Item.SPEED_BOOSTER))
-            )
-        )
+        CHARGE_BEAM.requiredAccessState
+            .and(CAN_LAY_POWER_BOMBS)
+            .and((i, s) -> s.contains(SHORT_CHARGE) || (i.contains(Item.GRAVITY_SUIT) && i.contains(Item.SPEED_BOOSTER)))
     ),
 
     GREEN_HILLS_MISSILES(
@@ -345,7 +344,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78676,
-        GREEN_HILLS
+        CAN_ACCESS_GREEN_HILLS
     ),
 
     /****************************** Red Brinstar ******************************/
@@ -354,11 +353,9 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78876,
-        UPPER_RED_TOWER.and((i, s) ->
-            i.contains(Item.POWER_BOMBS) && (
-                i.contains(Item.GRAPPLE_BEAM) || s.contains(XRAY_DAMAGE_BOOST)
-            )
-        )
+        CAN_ACCESS_RED_BRINSTAR
+            .and(CAN_LAY_POWER_BOMBS)
+            .and((i, s) -> i.contains(Item.GRAPPLE_BEAM) || s.contains(XRAY_DAMAGE_BOOST))
     ),
 
     ALPHA_POWER_BOMBS(
@@ -367,8 +364,8 @@ public enum ItemLocation {
         CHOZO,
         0x7890e,
         Set.of(),
-        UPPER_RED_TOWER,
-        (i, s) -> i.contains(Item.POWER_BOMBS)
+        CAN_ACCESS_RED_BRINSTAR,
+        CAN_LAY_POWER_BOMBS
     ),
 
     ALPHA_POWER_BOMBS_MISSILES(
@@ -376,7 +373,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78914,
-        ALPHA_POWER_BOMBS.canAccess.and((i, s) -> i.contains(Item.POWER_BOMBS))
+        ALPHA_POWER_BOMBS.requiredAccessState.and(CAN_LAY_POWER_BOMBS)
     ),
 
     BIG_HOPPER_POWER_BOMBS(
@@ -384,7 +381,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x788ca,
-        ALPHA_POWER_BOMBS.canAccess.and((i, s) -> i.contains(Item.POWER_BOMBS))
+        ALPHA_POWER_BOMBS.requiredAccessState.and(CAN_LAY_POWER_BOMBS)
     ),
 
     SPAZER(
@@ -392,7 +389,7 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x7896e,
-        LOWER_RED_TOWER
+        CAN_ACCESS_RED_BRINSTAR.and(CAN_LAY_ANY_BOMB_TYPE)
     ),
 
     KRAID_MISSILES(
@@ -400,7 +397,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x789ec,
-        LOWER_RED_TOWER.and((i, s) -> i.contains(Item.POWER_BOMBS))
+        CAN_ACCESS_RED_BRINSTAR.and(CAN_LAY_POWER_BOMBS)
     ),
 
     KRAID_WAREHOUSE(
@@ -408,7 +405,7 @@ public enum ItemLocation {
         MAJOR,
         HIDDEN,
         0x7899c,
-        LOWER_RED_TOWER
+        CAN_ACCESS_RED_BRINSTAR
     ),
 
     KRAID_REWARD(
@@ -416,16 +413,17 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78aca,
-        LOWER_RED_TOWER
+        CAN_ACCESS_RED_BRINSTAR
     ),
 
+    // TODO audit remainder
     /****************************** Upper Norfair ******************************/
     HI_JUMP_BOOTS(
         "Hi-Jump Boots",
         MAJOR,
         CHOZO,
         0x78bac,
-        LOWER_RED_TOWER
+        CAN_ACCESS_RED_BRINSTAR
     ),
 
     HI_JUMP_MISSILES(
@@ -433,7 +431,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78be6,
-        LOWER_RED_TOWER
+        CAN_ACCESS_RED_BRINSTAR
     ),
 
     HI_JUMP_ENERGY_TANK(
@@ -441,7 +439,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78bec,
-        LOWER_RED_TOWER
+        CAN_ACCESS_RED_BRINSTAR
     ),
 
     BUSINESS_CENTER_GREEN_GATE_MISSILES(
@@ -449,9 +447,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78bc0,
-        LOWER_RED_TOWER.and((i, s) ->
+        CAN_ACCESS_RED_BRINSTAR.and((i, s) ->
             // Vanilla access
-            (HEATED_UPPER_NORFAIR.test(i, s) && (i.contains(Item.GRAPPLE_BEAM) || i.contains(Item.SPACE_JUMP))) ||
+            (HEATED_UPPER_NORFAIR.matches(i, s) && (i.contains(Item.GRAPPLE_BEAM) || i.contains(Item.SPACE_JUMP))) ||
 
             // Access with green gate glitch
             (i.contains(Item.POWER_BOMBS) && s.contains(GREEN_GATE_GLITCH))
@@ -471,7 +469,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x78b46,
-        LOWER_RED_TOWER.and((i, s) ->
+        CAN_ACCESS_RED_BRINSTAR.and((i, s) ->
             i.contains(Item.POWER_BOMBS) && (
                 i.contains(Item.SPEED_BOOSTER) || s.contains(MOCKBALL)
             )
@@ -555,7 +553,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78c52,
-        BUBBLE_MOUNTAIN_RESERVE.canAccess
+        BUBBLE_MOUNTAIN_RESERVE.requiredAccessState
     ),
 
     BUBBLE_MOUNTAIN_RESERVE_HIDDEN_MISSILES(
@@ -563,7 +561,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x78c44,
-        BUBBLE_MOUNTAIN_RESERVE.canAccess
+        BUBBLE_MOUNTAIN_RESERVE.requiredAccessState
     ),
 
     BUBBLE_MOUNTAIN_MISSILES(
@@ -766,7 +764,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7c5dd,
-        LEFT_SAND_PIT_RESERVE.canAccess
+        LEFT_SAND_PIT_RESERVE.requiredAccessState
     ),
 
     RIGHT_SAND_PIT_MISSILES(
@@ -774,7 +772,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7c5eb,
-        LEFT_SAND_PIT_RESERVE.canAccess
+        LEFT_SAND_PIT_RESERVE.requiredAccessState
     ),
 
     RIGHT_SAND_PIT_POWER_BOMBS(
@@ -782,7 +780,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7c5f1,
-        RIGHT_SAND_PIT_MISSILES.canAccess
+        RIGHT_SAND_PIT_MISSILES.requiredAccessState
     ),
 
     /****************************** Yellow Maridia ******************************/
@@ -840,7 +838,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7c609,
-        AQUEDUCT_MISSILES.canAccess
+        AQUEDUCT_MISSILES.requiredAccessState
     ),
 
     BOTWOON_ENERGY_TANK(
@@ -947,21 +945,21 @@ public enum ItemLocation {
     final Item.Type itemType;
     final ItemLocation.Type locationType;
     final Set<Item> itemBlacklist;
-    final AccessPredicate canAccess;
-    final AccessPredicate canExit;
+    final PlayerState requiredAccessState;
+    final PlayerState requiredExitState;
     final int hexAddress;
 
-    ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int hexAddress, AccessPredicate canAccess) {
-        this(name, itemType, locationType, hexAddress, Set.of(), canAccess, ALWAYS);
+    ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int hexAddress, PlayerState requiredAccessState) {
+        this(name, itemType, locationType, hexAddress, Set.of(), requiredAccessState, ANY);
     }
 
-    ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int hexAddress, Set<Item> itemBlacklist, AccessPredicate canAccess, AccessPredicate canExit) {
+    ItemLocation(String name, Item.Type itemType, ItemLocation.Type locationType, int hexAddress, Set<Item> itemBlacklist, PlayerState requiredAccessState, PlayerState requiredExitState) {
         this.name = name;
         this.itemType = itemType;
         this.locationType = locationType;
         this.hexAddress = hexAddress;
-        this.canAccess = canAccess;
-        this.canExit = canExit;
+        this.requiredAccessState = requiredAccessState;
+        this.requiredExitState = requiredExitState;
         this.itemBlacklist = EnumSet.copyOf(itemBlacklist);
     }
 
