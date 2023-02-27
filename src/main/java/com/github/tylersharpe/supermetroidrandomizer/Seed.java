@@ -38,10 +38,8 @@ final class Seed {
                             }
 
                             Collection<Item> potentialItems = Util.concat(seededItems.values(), item);
-                            Set<ProgressionAbility> potentialAbilities = ProgressionAbility.allUnlockedWith(potentialItems);
                             Set<Strat> potentialStrats = Strat.allPerformableWith(allowedStrats, potentialItems);
-
-                            return seedableLocation.canExit.test(potentialAbilities, potentialStrats);
+                            return seedableLocation.canExit.test(potentialItems, potentialStrats);
                         }).toList();
 
                 if (itemsCanSeedHere.size() > 0) {
@@ -57,7 +55,6 @@ final class Seed {
             Map<Item, Set<ItemLocation>> progressionByItem = new EnumMap<>(Item.class);
             for (Item seedableItem : uniqueSeedableItems) {
                 Collection<Item> potentialItems = Util.concat(seededItems.values(), seedableItem);
-                Set<ProgressionAbility> potentialAbilities = ProgressionAbility.allUnlockedWith(potentialItems);
                 Set<Strat> potentialStrats = Strat.allPerformableWith(allowedStrats, potentialItems);
 
                 Set<ItemLocation> locationsOpened = Stream.of(ItemLocation.values())
@@ -65,7 +62,7 @@ final class Seed {
                         .filter(location -> !seededItems.containsKey(location) && !seedableLocations.contains(location))
 
                         // New locations we could access with this item
-                        .filter(location -> location.canAccess.test(potentialAbilities, potentialStrats))
+                        .filter(location -> location.canAccess.test(potentialItems, potentialStrats))
                         .collect(toSet());
 
                 if (locationsOpened.size() > 0) {

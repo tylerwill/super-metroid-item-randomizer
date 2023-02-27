@@ -8,7 +8,6 @@ import static com.github.tylersharpe.supermetroidrandomizer.Item.Type.MAJOR;
 import static com.github.tylersharpe.supermetroidrandomizer.Item.Type.MINOR;
 import static com.github.tylersharpe.supermetroidrandomizer.Item.VARIA_SUIT;
 import static com.github.tylersharpe.supermetroidrandomizer.ItemLocation.Type.*;
-import static com.github.tylersharpe.supermetroidrandomizer.ProgressionAbility.*;
 import static com.github.tylersharpe.supermetroidrandomizer.Strat.*;
 
 public enum ItemLocation {
@@ -29,7 +28,7 @@ public enum ItemLocation {
         MINOR,
         CHOZO,
         0x78802,
-        (a, s) -> a.contains(MORPH)
+        (i, s) -> i.contains(Item.MORPH_BALL)
     ),
 
     BLUE_BRINSTAR_ENERGY_TANK(
@@ -38,12 +37,12 @@ public enum ItemLocation {
         HIDDEN,
         0x7879e,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (a, s) -> a.contains(MISSILES) && (
+        (i, s) -> i.contains(Item.MISSILES) && (
             // vanilla
-            (a.contains(HIGH_JUMP)) ||
+            (i.contains(Item.HIGH_JUMP_BOOTS)) ||
 
             // IBJ
-            (s.contains(INFINITE_BOMB_JUMP) && a.contains(MORPH) && a.contains(ProgressionAbility.BOMBS))
+            (s.contains(INFINITE_BOMB_JUMP) && i.contains(Item.MORPH_BALL) && i.contains(Item.BOMBS))
         ),
         ALWAYS
     ),
@@ -53,7 +52,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78798,
-        (a, s) -> a.contains(MISSILES) && a.contains(MORPH)
+        (i, s) -> i.contains(Item.MISSILES) && i.contains(Item.MORPH_BALL)
     ),
 
     BILLIE_MAYS_MISSILES_1(
@@ -61,9 +60,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78836,
-        (a, s) -> a.contains(MISSILES) &&
-            a.contains(ProgressionAbility.POWER_BOMBS) &&
-            a.contains(ProgressionAbility.SPEED_BOOSTER)
+        (i, s) -> i.contains(Item.MISSILES) && i.contains(Item.POWER_BOMBS) && i.contains(Item.SPEED_BOOSTER)
     ),
 
     BILLIE_MAYS_MISSILES_2(
@@ -79,7 +76,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7874c,
-        (a, s) -> a.contains(ProgressionAbility.POWER_BOMBS)
+        (i, s) -> i.contains(Item.POWER_BOMBS)
     ),
 
     /****************************** West Crateria ******************************/
@@ -88,7 +85,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x783ee,
-        (a, s) -> a.contains(DESTROY_BOMB_BLOCKS)
+        AccessPredicate.DESTROY_BOMB_BLOCKS
     ),
 
     CRATERIA_CLIMB_SUPERS(
@@ -96,9 +93,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78478,
-        (a, s) -> a.contains(ProgressionAbility.POWER_BOMBS) &&
-            a.contains(ProgressionAbility.SPEED_BOOSTER) &&
-            (a.contains(ProgressionAbility.ICE_BEAM) || s.contains(SHORT_CHARGE)
+        (i, s) -> i.contains(Item.POWER_BOMBS) &&
+            i.contains(Item.SPEED_BOOSTER) &&
+            (i.contains(Item.ICE_BEAM) || s.contains(SHORT_CHARGE)
         )
     ),
 
@@ -108,7 +105,7 @@ public enum ItemLocation {
         CHOZO,
         0x78404,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (a, s) -> a.contains(MORPH) && a.contains(MISSILES),
+        (i, s) -> i.contains(Item.MORPH_BALL) && i.contains(Item.MISSILES),
         ALWAYS
     ),
 
@@ -117,8 +114,8 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78486,
-        (a, s) -> a.contains(MORPH) && (
-            a.contains(ProgressionAbility.BOMBS) || a.contains(ProgressionAbility.POWER_BOMBS)
+        (i, s) -> i.contains(Item.MORPH_BALL) && (
+            i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS)
         )
     ),
 
@@ -127,11 +124,11 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x781cc,
-        (a, s) ->
-            a.contains(ProgressionAbility.POWER_BOMBS) && (
-                a.contains(ProgressionAbility.SPEED_BOOSTER) ||
-                a.contains(ProgressionAbility.SPACE_JUMP) ||
-                (a.contains(ProgressionAbility.BOMBS) && s.contains(INFINITE_BOMB_JUMP))
+        (i, s) ->
+            i.contains(Item.POWER_BOMBS) && (
+                i.contains(Item.SPEED_BOOSTER) ||
+                i.contains(Item.SPACE_JUMP) ||
+                (i.contains(Item.BOMBS) && s.contains(INFINITE_BOMB_JUMP))
             )
         ),
 
@@ -141,7 +138,7 @@ public enum ItemLocation {
         NORMAL,
         0x78264,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (a, s) -> a.contains(DESTROY_BOMB_BLOCKS),
+        AccessPredicate.DESTROY_BOMB_BLOCKS,
         ALWAYS
     ),
 
@@ -150,8 +147,8 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7846a,
-        GAUNTLET_ENERGY_TANK.canAccess.and((a, s) -> a.contains(MORPH) && (
-            a.contains(ProgressionAbility.BOMBS) || a.contains(ProgressionAbility.POWER_BOMBS))
+        GAUNTLET_ENERGY_TANK.canAccess.and((i, s) -> i.contains(Item.MORPH_BALL) && (
+            i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS))
         )
     ),
 
@@ -169,7 +166,8 @@ public enum ItemLocation {
         NORMAL,
         0x78432,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (a, s) -> a.contains(DESTROY_BOMB_BLOCKS) || s.contains(SHORT_CHARGE),
+        AccessPredicate.DESTROY_BOMB_BLOCKS
+                .or((i, s) -> i.contains(Item.SPEED_BOOSTER) && s.contains(SHORT_CHARGE)),
         ALWAYS
     ),
 
@@ -212,7 +210,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78518,
-        BRINSTAR_PARLOR.and((a, s) -> a.contains(MISSILES))
+        BRINSTAR_PARLOR.and((i, s) -> i.contains(Item.MISSILES))
     ),
 
     EARLY_SUPERS_SUPER_MISSILES(
@@ -220,9 +218,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7851e,
-        BRINSTAR_PARLOR.and((a, s) ->
-            a.contains(MISSILES) && (
-                a.contains(ProgressionAbility.SPEED_BOOSTER) || s.contains(MOCKBALL)
+        BRINSTAR_PARLOR.and((i, s) ->
+            i.contains(Item.MISSILES) && (
+                i.contains(Item.SPEED_BOOSTER) || s.contains(MOCKBALL)
             )
         )
     ),
@@ -248,7 +246,8 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x78532,
-        EARLY_SUPERS_SUPER_MISSILES.canAccess.and((a, s) -> a.contains(MORPH) && a.contains(DESTROY_BOMB_BLOCKS))
+        EARLY_SUPERS_SUPER_MISSILES.canAccess
+            .and((i, s) -> i.contains(Item.MORPH_BALL) && (i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS)))
     ),
 
     ETECOONS_ENERGY_TANK(
@@ -280,7 +279,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78608,
-        BIG_PINK
+            BRINSTAR_PINK_MOUNTAIN
     ),
 
     WAVE_GATE(
@@ -288,9 +287,9 @@ public enum ItemLocation {
         MAJOR,
         NORMAL,
         0x78824,
-        BIG_PINK.and((a, s) ->
-            a.contains(ProgressionAbility.POWER_BOMBS) && (
-                s.contains(WAVE_GATE_GLITCH) || a.contains(ProgressionAbility.WAVE_BEAM)
+        BRINSTAR_PINK_MOUNTAIN.and((i, s) ->
+            i.contains(Item.POWER_BOMBS) && (
+                s.contains(WAVE_GATE_GLITCH) || i.contains(Item.WAVE_BEAM)
             )
         )
     ),
@@ -300,7 +299,7 @@ public enum ItemLocation {
         MINOR,
         CHOZO,
         0x784e4,
-        BIG_PINK
+        BRINSTAR_PINK_MOUNTAIN
     ),
 
     MISSION_IMPOSSIBLE_POWER_BOMBS(
@@ -308,7 +307,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7865c,
-        BIG_PINK_GRAPPLE_MISSILES.canAccess.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
+        BIG_PINK_GRAPPLE_MISSILES.canAccess.and((i, s) -> i.contains(Item.POWER_BOMBS))
     ),
 
     CHARGE_MISSILES(
@@ -316,7 +315,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7860e,
-        BIG_PINK
+            BRINSTAR_PINK_MOUNTAIN
     ),
 
     CHARGE_BEAM(
@@ -324,7 +323,9 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78614,
-        BIG_PINK.and((a, s) -> a.contains(MORPH) && a.contains(DESTROY_BOMB_BLOCKS))
+        BRINSTAR_PINK_MOUNTAIN.and((i, s) ->
+            i.contains(Item.MORPH_BALL) && (i.contains(Item.BOMBS) || i.contains(Item.POWER_BOMBS))
+        )
     ),
 
     WATERWAY(
@@ -332,9 +333,9 @@ public enum ItemLocation {
         MAJOR,
         NORMAL,
         0x787fa,
-        CHARGE_BEAM.canAccess.and((a, s) ->
-            a.contains(ProgressionAbility.POWER_BOMBS) && (
-                s.contains(SHORT_CHARGE) || (a.contains(GRAVITY) && a.contains(ProgressionAbility.SPEED_BOOSTER))
+        CHARGE_BEAM.canAccess.and((i, s) ->
+            i.contains(Item.POWER_BOMBS) && (
+                s.contains(SHORT_CHARGE) || (i.contains(Item.GRAVITY_SUIT) && i.contains(Item.SPEED_BOOSTER))
             )
         )
     ),
@@ -353,9 +354,9 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78876,
-        UPPER_RED_TOWER.and((a, s) ->
-            a.contains(ProgressionAbility.POWER_BOMBS) && (
-                a.contains(ProgressionAbility.GRAPPLE) || s.contains(XRAY_DAMAGE_BOOST)
+        UPPER_RED_TOWER.and((i, s) ->
+            i.contains(Item.POWER_BOMBS) && (
+                i.contains(Item.GRAPPLE_BEAM) || s.contains(XRAY_DAMAGE_BOOST)
             )
         )
     ),
@@ -367,7 +368,7 @@ public enum ItemLocation {
         0x7890e,
         Set.of(),
         UPPER_RED_TOWER,
-        (a, s) -> a.contains(ProgressionAbility.POWER_BOMBS)
+        (i, s) -> i.contains(Item.POWER_BOMBS)
     ),
 
     ALPHA_POWER_BOMBS_MISSILES(
@@ -375,7 +376,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78914,
-        ALPHA_POWER_BOMBS.canAccess.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
+        ALPHA_POWER_BOMBS.canAccess.and((i, s) -> i.contains(Item.POWER_BOMBS))
     ),
 
     BIG_HOPPER_POWER_BOMBS(
@@ -383,7 +384,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x788ca,
-        ALPHA_POWER_BOMBS.canAccess.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
+        ALPHA_POWER_BOMBS.canAccess.and((i, s) -> i.contains(Item.POWER_BOMBS))
     ),
 
     SPAZER(
@@ -399,7 +400,7 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x789ec,
-        LOWER_RED_TOWER.and((a, s) -> a.contains(ProgressionAbility.POWER_BOMBS))
+        LOWER_RED_TOWER.and((i, s) -> i.contains(Item.POWER_BOMBS))
     ),
 
     KRAID_WAREHOUSE(
@@ -448,12 +449,12 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78bc0,
-        LOWER_RED_TOWER.and((a, s) ->
+        LOWER_RED_TOWER.and((i, s) ->
             // Vanilla access
-            (HEATED_UPPER_NORFAIR.test(a, s) && (a.contains(ProgressionAbility.GRAPPLE) || a.contains(ProgressionAbility.SPACE_JUMP))) ||
+            (HEATED_UPPER_NORFAIR.test(i, s) && (i.contains(Item.GRAPPLE_BEAM) || i.contains(Item.SPACE_JUMP))) ||
 
             // Access with green gate glitch
-            (a.contains(ProgressionAbility.POWER_BOMBS) && s.contains(GREEN_GATE_GLITCH))
+            (i.contains(Item.POWER_BOMBS) && s.contains(GREEN_GATE_GLITCH))
         )
     ),
 
@@ -462,7 +463,7 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78b24,
-        HEATED_UPPER_NORFAIR.and((a, s) -> a.contains(ProgressionAbility.SPEED_BOOSTER) || s.contains(MOCKBALL))
+        HEATED_UPPER_NORFAIR.and((i, s) -> i.contains(Item.SPEED_BOOSTER) || s.contains(MOCKBALL))
     ),
 
     CROC_SPEEDWAY_MISSILES(
@@ -470,9 +471,9 @@ public enum ItemLocation {
         MINOR,
         HIDDEN,
         0x78b46,
-        LOWER_RED_TOWER.and((a, s) ->
-            a.contains(ProgressionAbility.POWER_BOMBS) && (
-                a.contains(ProgressionAbility.SPEED_BOOSTER) || s.contains(MOCKBALL)
+        LOWER_RED_TOWER.and((i, s) ->
+            i.contains(Item.POWER_BOMBS) && (
+                i.contains(Item.SPEED_BOOSTER) || s.contains(MOCKBALL)
             )
         )
     ),
@@ -490,9 +491,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78c04,
-        HEATED_UPPER_NORFAIR.and((a, s) ->
-            a.contains(ProgressionAbility.GRAPPLE) || (
-                a.contains(ProgressionAbility.SPEED_BOOSTER) && a.contains(HIGH_JUMP)
+        HEATED_UPPER_NORFAIR.and((i, s) ->
+            i.contains(Item.GRAPPLE_BEAM) || (
+                i.contains(Item.SPEED_BOOSTER) && i.contains(Item.HIGH_JUMP_BOOTS)
             )
         )
     ),
@@ -510,9 +511,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78c2a,
-        HEATED_UPPER_NORFAIR.and((a, s) ->
+        HEATED_UPPER_NORFAIR.and((i, s) ->
             s.contains(INFINITE_BOMB_JUMP) || (
-                a.contains(ProgressionAbility.POWER_BOMBS) && a.contains(ProgressionAbility.SPEED_BOOSTER)
+                i.contains(Item.POWER_BOMBS) && i.contains(Item.SPEED_BOOSTER)
             )
         )
     ),
@@ -522,9 +523,9 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78c36,
-        HEATED_UPPER_NORFAIR.and((a, s) ->
+        HEATED_UPPER_NORFAIR.and((i, s) ->
             // Vanilla access
-            (a.contains(ProgressionAbility.POWER_BOMBS) && a.contains(ProgressionAbility.SPEED_BOOSTER)) ||
+            (i.contains(Item.POWER_BOMBS) && i.contains(Item.SPEED_BOOSTER)) ||
 
             // Entering from behind
             (s.contains(GREEN_GATE_GLITCH))
@@ -544,8 +545,8 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x78c3e,
-        HEATED_UPPER_NORFAIR.and((a, s) ->
-            a.contains(ProgressionAbility.GRAPPLE) || s.contains(INFINITE_BOMB_JUMP) || a.contains(ProgressionAbility.ICE_BEAM)
+        HEATED_UPPER_NORFAIR.and((i, s) ->
+            i.contains(Item.GRAPPLE_BEAM) || s.contains(INFINITE_BOMB_JUMP) || i.contains(Item.ICE_BEAM)
         )
     ),
 
@@ -570,7 +571,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78c66,
-        HEATED_UPPER_NORFAIR.and((a, s) -> a.contains(DESTROY_BOMB_BLOCKS))
+        HEATED_UPPER_NORFAIR
     ),
 
     SPEED_BOOSTER(
@@ -629,21 +630,21 @@ public enum ItemLocation {
         0x79110,
         Set.of(),
         LOWER_NORFAIR,
-        (a, s) ->
+        (i, s) ->
             // Vanilla exit
-            a.contains(ProgressionAbility.SPACE_JUMP) ||
+            i.contains(Item.SPACE_JUMP) ||
 
             // INFINITE_BOMB_JUMP through the ceiling
             s.contains(INFINITE_BOMB_JUMP) ||
 
             // Exit using shine spark
-            a.contains(ProgressionAbility.SPEED_BOOSTER) ||
+            i.contains(Item.SPEED_BOOSTER) ||
 
             // Exit via spring ball glitch
             s.contains(SPRING_BALL_DOUBLE_JUMP) ||
 
             // Exit via high jump from energy refill entrance
-            (a.contains(HIGH_JUMP) && a.contains(ProgressionAbility.SPEED_BOOSTER))
+            (i.contains(Item.HIGH_JUMP_BOOTS) && i.contains(Item.SPEED_BOOSTER))
     ),
 
     MICKEY_MOUSE_MISSILES(
@@ -708,7 +709,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7c437,
-        GREEN_MARIDIA_ENTRY.and((a, s) -> a.contains(GRAVITY) && a.contains(ProgressionAbility.SPEED_BOOSTER))
+        GREEN_MARIDIA_ENTRY.and((i, s) -> i.contains(Item.GRAVITY_SUIT) && i.contains(Item.SPEED_BOOSTER))
     ),
 
     MARIDIA_ALCOVE_SUPER_MISSILES(
@@ -732,8 +733,8 @@ public enum ItemLocation {
         MAJOR,
         NORMAL,
         0x7c47d,
-        GREEN_MARIDIA_FULL.and((a, s) ->
-            a.contains(ProgressionAbility.GRAPPLE) || a.contains(ProgressionAbility.SPACE_JUMP) || s.contains(INFINITE_BOMB_JUMP)
+        GREEN_MARIDIA_FULL.and((i, s) ->
+            i.contains(Item.GRAPPLE_BEAM) || i.contains(Item.SPACE_JUMP) || s.contains(INFINITE_BOMB_JUMP)
         )
     ),
 
@@ -742,11 +743,11 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x7c6e5,
-        GREEN_MARIDIA_FULL.and((a, s) ->
+        GREEN_MARIDIA_FULL.and((i, s) ->
             s.contains(ICE_CLIP) ||
-            (a.contains(GRAVITY) && a.contains(ProgressionAbility.GRAPPLE) && (
-                a.contains(ProgressionAbility.SPACE_JUMP) ||
-                a.contains(HIGH_JUMP) ||
+            (i.contains(Item.GRAVITY_SUIT) && i.contains(Item.GRAPPLE_BEAM) && (
+                i.contains(Item.SPACE_JUMP) ||
+                i.contains(Item.HIGH_JUMP_BOOTS) ||
                 s.contains(SPRING_BALL_DOUBLE_JUMP))
             )
         )
@@ -757,7 +758,7 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x7c5e3,
-        GREEN_MARIDIA_FULL.and((a, s) -> a.contains(GRAVITY))
+        GREEN_MARIDIA_FULL.and((i, s) -> i.contains(Item.GRAVITY_SUIT))
     ),
 
     LEFT_SAND_PIT_MISSILES(
@@ -816,12 +817,12 @@ public enum ItemLocation {
         0x7c559,
         Set.of(),
         BOTWOON,
-        BOTWOON.and((a, s) ->
+        BOTWOON.and((i, s) ->
             // Allows to get to the exit
-            (a.contains(ProgressionAbility.SPACE_JUMP) || s.contains(INFINITE_BOMB_JUMP) || s.contains(SHORT_CHARGE)) &&
+            (i.contains(Item.SPACE_JUMP) || s.contains(INFINITE_BOMB_JUMP) || s.contains(SHORT_CHARGE)) &&
 
             // Allows to kill enemies to open the door
-            (a.contains(ProgressionAbility.PLASMA_BEAM) || a.contains(ProgressionAbility.SCREW_ATTACK))
+            (i.contains(Item.PLASMA_BEAM) || i.contains(Item.SCREW_ATTACK))
         )
     ),
 
@@ -831,7 +832,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7c603,
-        GREEN_MARIDIA_FULL.and((a, s) -> a.contains(GRAVITY) && a.contains(ProgressionAbility.SPEED_BOOSTER))
+        GREEN_MARIDIA_FULL.and((i, s) -> i.contains(Item.GRAVITY_SUIT) && i.contains(Item.SPEED_BOOSTER))
     ),
 
     AQUEDUCT_SUPER_MISSILES(
@@ -849,7 +850,7 @@ public enum ItemLocation {
         0x7c755,
         Set.of(),
         BOTWOON,
-        BOTWOON.and((a, s) -> a.contains(GRAVITY))
+        BOTWOON.and((i, s) -> i.contains(Item.GRAVITY_SUIT))
     ),
 
     DRAYGON_MINOR(
@@ -867,12 +868,12 @@ public enum ItemLocation {
         0x7c7a7,
         Set.of(),
         BOTWOON,
-        (a, s) ->
+        (i, s) ->
             s.contains(GRAPPLE_GRAVITY_LAUNCH) ||
             s.contains(GRAVITY_JUMP) ||
-            (a.contains(GRAVITY) && a.contains(ProgressionAbility.SPACE_JUMP)) ||
-            (a.contains(GRAVITY) && s.contains(INFINITE_BOMB_JUMP)) ||
-            (a.contains(GRAVITY) && a.contains(ProgressionAbility.SPEED_BOOSTER) && a.contains(HIGH_JUMP))
+            (i.contains(Item.GRAVITY_SUIT) && i.contains(Item.SPACE_JUMP)) ||
+            (i.contains(Item.GRAVITY_SUIT) && s.contains(INFINITE_BOMB_JUMP)) ||
+            (i.contains(Item.GRAVITY_SUIT) && i.contains(Item.SPEED_BOOSTER) && i.contains(Item.HIGH_JUMP_BOOTS))
     ),
 
     /****************************** Wrecked Ship ******************************/
@@ -937,7 +938,7 @@ public enum ItemLocation {
         MAJOR,
         CHOZO,
         0x7c2e9,
-        WRECKED_SHIP.and((a, s) -> a.contains(ProgressionAbility.SPEED_BOOSTER))
+        WRECKED_SHIP.and((i, s) -> i.contains(Item.SPEED_BOOSTER))
     );
 
     enum Type { NORMAL, HIDDEN, CHOZO }
