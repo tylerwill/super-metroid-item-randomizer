@@ -23,7 +23,9 @@ final class Seed {
 
         Set<Strat> initialStrats = Strat.allPerformableWith(allowedStrats, Set.of());
         List<ItemLocation> seedableLocations = Stream.of(ItemLocation.values())
-                .filter(location -> location.requiredAccessState.matches(Set.of(), initialStrats) && location.requiredExitState.matches(Set.of(), initialStrats))
+                .filter(location ->
+                    location.requiredAccessState.matches(Set.of(), initialStrats) &&
+                    location.requiredExitState.matches(Set.of(), initialStrats))
                 .collect(toList());
 
         while (remainingItemsToSeed.size() > 0) {
