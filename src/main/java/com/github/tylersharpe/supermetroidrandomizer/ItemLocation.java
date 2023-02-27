@@ -1,5 +1,6 @@
 package com.github.tylersharpe.supermetroidrandomizer;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -960,7 +961,11 @@ public enum ItemLocation {
         this.hexAddress = hexAddress;
         this.requiredAccessState = requiredAccessState;
         this.requiredExitState = requiredExitState;
-        this.itemBlacklist = EnumSet.copyOf(itemBlacklist);
+
+        this.itemBlacklist = EnumSet.noneOf(Item.class);
+        if (!itemBlacklist.isEmpty()) {
+            this.itemBlacklist.addAll(itemBlacklist);
+        }
     }
 
 }

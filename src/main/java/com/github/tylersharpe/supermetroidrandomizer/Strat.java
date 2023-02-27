@@ -29,7 +29,8 @@ enum Strat {
     final Set<Item> requiredItems;
 
     Strat(Item... requiredItems) {
-        this.requiredItems = EnumSet.copyOf(List.of(requiredItems));
+        this.requiredItems = EnumSet.noneOf(Item.class);
+        Collections.addAll(this.requiredItems, requiredItems);
     }
 
     static Set<Strat> allPerformableWith(Set<Strat> allPossibleStrats, Collection<Item> withItems) {
