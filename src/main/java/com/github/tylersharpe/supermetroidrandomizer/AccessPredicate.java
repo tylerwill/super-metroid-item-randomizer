@@ -14,17 +14,17 @@ interface AccessPredicate {
     AccessPredicate BRINSTAR_PARLOR = ZEBES_AWAKE.and((a, s) ->
             a.contains(DESTROY_BOMB_BLOCKS) || s.contains(SHORT_CHARGE));
 
-    AccessPredicate BIG_PINK = BRINSTAR_PARLOR.and((a, s) -> a.contains(OPEN_RED_DOORS));
+    AccessPredicate BIG_PINK = BRINSTAR_PARLOR.and((a, s) -> a.contains(MISSILES));
 
     AccessPredicate GREEN_HILLS =
-            BIG_PINK.and((a, s) -> a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)) // Vanilla access
+            BIG_PINK.and((a, s) -> a.contains(SUPER_MISSILES)) // Vanilla access
                     .or(ZEBES_AWAKE.and((a, s) -> a.contains(POWER_BOMBS))); // Meme route
 
     AccessPredicate ETECOONS = BRINSTAR_PARLOR.and((a, s) -> a.contains(POWER_BOMBS));
 
     AccessPredicate UPPER_RED_TOWER =
-            GREEN_HILLS.and((a, s) -> a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)) // Vanilla access
-                    .or((a, s) -> a.contains(POWER_BOMBS) && a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS)); // Access from upper crateria
+            GREEN_HILLS.and((a, s) -> a.contains(SUPER_MISSILES)) // Vanilla access
+                    .or((a, s) -> a.contains(POWER_BOMBS) && a.contains(SUPER_MISSILES)); // Access from upper crateria
 
     AccessPredicate LOWER_RED_TOWER = UPPER_RED_TOWER.and((a, s) -> a.contains(DESTROY_BOMB_BLOCKS));
 
@@ -61,7 +61,7 @@ interface AccessPredicate {
         (s.contains(ICE_CLIP) && a.contains(GRAVITY)) // Ice clip if lacking speed booster
     );
 
-    AccessPredicate MOAT = (a, s) -> a.contains(POWER_BOMBS) && a.contains(DESTROY_SUPER_MISSILE_OBSTRUCTIONS);
+    AccessPredicate MOAT = (a, s) -> a.contains(POWER_BOMBS) && a.contains(SUPER_MISSILES);
 
     AccessPredicate WRECKED_SHIP = MOAT.and((a, s) ->
         a.contains(GRAPPLE) || s.contains(CONTINUOUS_WALL_JUMP) || s.contains(HORIZONTAL_BOMB_JUMP)

@@ -38,7 +38,7 @@ public enum ItemLocation {
         HIDDEN,
         0x7879e,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (a, s) -> a.contains(OPEN_RED_DOORS) && (
+        (a, s) -> a.contains(MISSILES) && (
             // vanilla
             (a.contains(HIGH_JUMP)) ||
 
@@ -53,7 +53,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78798,
-        (a, s) -> a.contains(OPEN_RED_DOORS) && a.contains(MORPH)
+        (a, s) -> a.contains(MISSILES) && a.contains(MORPH)
     ),
 
     BILLIE_MAYS_MISSILES_1(
@@ -61,7 +61,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78836,
-        (a, s) -> a.contains(OPEN_RED_DOORS) &&
+        (a, s) -> a.contains(MISSILES) &&
             a.contains(ProgressionAbility.POWER_BOMBS) &&
             a.contains(ProgressionAbility.SPEED_BOOSTER)
     ),
@@ -108,7 +108,7 @@ public enum ItemLocation {
         CHOZO,
         0x78404,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
-        (a, s) -> a.contains(MORPH) && a.contains(OPEN_RED_DOORS),
+        (a, s) -> a.contains(MORPH) && a.contains(MISSILES),
         ALWAYS
     ),
 
@@ -212,7 +212,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78518,
-        BRINSTAR_PARLOR.and((a, s) -> a.contains(OPEN_RED_DOORS))
+        BRINSTAR_PARLOR.and((a, s) -> a.contains(MISSILES))
     ),
 
     EARLY_SUPERS_SUPER_MISSILES(
@@ -221,7 +221,7 @@ public enum ItemLocation {
         NORMAL,
         0x7851e,
         BRINSTAR_PARLOR.and((a, s) ->
-            a.contains(OPEN_RED_DOORS) && (
+            a.contains(MISSILES) && (
                 a.contains(ProgressionAbility.SPEED_BOOSTER) || s.contains(MOCKBALL)
             )
         )
@@ -821,7 +821,7 @@ public enum ItemLocation {
             (a.contains(ProgressionAbility.SPACE_JUMP) || s.contains(INFINITE_BOMB_JUMP) || s.contains(SHORT_CHARGE)) &&
 
             // Allows to kill enemies to open the door
-            a.contains(PIERCING_DAMAGE)
+            (a.contains(ProgressionAbility.PLASMA_BEAM) || a.contains(ProgressionAbility.SCREW_ATTACK))
         )
     ),
 

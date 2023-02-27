@@ -13,15 +13,15 @@ public enum ProgressionAbility {
     MORPH,
     BOMBS,
     DESTROY_BOMB_BLOCKS,
-    OPEN_RED_DOORS,
+    MISSILES,
     POWER_BOMBS,
-    DESTROY_SUPER_MISSILE_OBSTRUCTIONS,
+    SUPER_MISSILES,
+    SCREW_ATTACK,
 
     CHARGE_BEAM, // considered a progression ability since it can be essential for late game bosses which don't drop missiles / supers
     WAVE_BEAM,
     ICE_BEAM,
-
-    PIERCING_DAMAGE, // ability to kill armored space pirates (gold / pink)
+    PLASMA_BEAM,
 
     HIGH_JUMP,
     SPEED_BOOSTER,
