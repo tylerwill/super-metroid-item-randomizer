@@ -1,6 +1,5 @@
 package com.github.tylersharpe.supermetroidrandomizer;
 
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -39,13 +38,8 @@ public enum ItemLocation {
         0x7879e,
         Set.of(VARIA_SUIT, Item.GRAVITY_SUIT),
         CAN_OPEN_RED_DOORS.and((i, s) ->
-            i.contains(Item.MISSILES) && (
-                // vanilla
-                i.contains(Item.HIGH_JUMP_BOOTS) ||
-
-                // IBJ
-                s.contains(INFINITE_BOMB_JUMP)
-            )
+            i.contains(Item.HIGH_JUMP_BOOTS) ||
+            s.contains(INFINITE_BOMB_JUMP)
         ),
         ANY
     ),
@@ -55,7 +49,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78798,
-        (i, s) -> i.contains(Item.MISSILES) && i.contains(Item.MORPH_BALL)
+        CAN_OPEN_RED_DOORS.and((i, s) -> i.contains(Item.MORPH_BALL))
     ),
 
     BILLIE_MAYS_MISSILES_1(
@@ -63,10 +57,9 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x78836,
-        (i, s) -> i.contains(Item.MISSILES)
-            && i.contains(Item.MORPH_BALL)
-            && i.contains(Item.POWER_BOMBS)
-            && i.contains(Item.SPEED_BOOSTER)
+        CAN_OPEN_RED_DOORS
+            .and(CAN_LAY_POWER_BOMBS)
+            .and((i, s) -> i.contains(Item.SPEED_BOOSTER))
     ),
 
     BILLIE_MAYS_MISSILES_2(
@@ -82,7 +75,7 @@ public enum ItemLocation {
         MINOR,
         NORMAL,
         0x7874c,
-        (i, s) -> i.contains(Item.MORPH_BALL) && i.contains(Item.POWER_BOMBS)
+        CAN_LAY_POWER_BOMBS
     ),
 
     /****************************** West Crateria ******************************/
